@@ -10,15 +10,16 @@ public class AsteroidManager : MonoBehaviour
 
     [SerializeField] private Asteroid _asteroidPrefab;
 
-    [SerializeField] private float _asteroidStatsMultiplier = 1f;
+    [SerializeField] private int _asteroidStatsMultiplier = 1;
     [SerializeField] private float _spawnPositionOffset = 1f;
     [SerializeField] private float _spawnCooldown = 1f;
 
     [SerializeField] private Transform _target;
     [SerializeField] private int _asteroidsPerWave = 20;
     [SerializeField] private int _waveCount = 0;
-    [SerializeField] private int _spawnedAsteroidsCount = 0;
-    [SerializeField] private int _destroyedAsteroidsCount = 0;
+
+    private int _spawnedAsteroidsCount = 0;
+    private int _destroyedAsteroidsCount = 0;
 
     private List<Asteroid> _pool;
 
@@ -108,8 +109,6 @@ public class AsteroidManager : MonoBehaviour
             return;
         }
 
-
-
         asteroid.transform.position = GenerateRandomPosition();
         asteroid.SetTarget(_target);
         asteroid.MultiplyStats(_asteroidStatsMultiplier);
@@ -121,7 +120,7 @@ public class AsteroidManager : MonoBehaviour
     private void SetupNewWave()
     {
         _waveCount++;
-        _asteroidStatsMultiplier += 0.1f;
+        _asteroidStatsMultiplier++;
         _spawnedAsteroidsCount = 0;
         _destroyedAsteroidsCount = 0;
 

@@ -6,6 +6,7 @@ public class StatUpgrade
     public StatType type;
     public int cost;
     public int incrementalCost;
-    public float value;
-    public float maxValue;
+    public int value;
+    public int maxValue;
+    public bool hasMaxValue;
 }

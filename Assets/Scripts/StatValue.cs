@@ -4,5 +4,5 @@ using System;
 public class StatValue
 {
     public StatType type;
-    public float value;
+    public int value;
 }

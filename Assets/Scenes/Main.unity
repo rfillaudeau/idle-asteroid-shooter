@@ -999,10 +999,8 @@ MonoBehaviour:
   _spawnPositionOffset: 1
   _spawnCooldown: 2
   _target: {fileID: 764310663}
-  _asteroidsPerWave: 10
+  _asteroidsPerWave: 20
   _waveCount: 0
-  _spawnedAsteroidsCount: 0
-  _destroyedAsteroidsCount: 0
 --- !u!4 &565059386
 Transform:
   m_ObjectHideFlags: 0
@@ -1597,7 +1595,9 @@ GameObject:
   - component: {fileID: 764310663}
   - component: {fileID: 764310665}
   - component: {fileID: 764310666}
+  - component: {fileID: 764310668}
   - component: {fileID: 764310664}
+  - component: {fileID: 764310667}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -1634,8 +1634,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 206f19f34a2de124698aa810704cb1ca, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _health: 0
-  _maxHealth: 5
   _gold: 0
   stats:
   - type: 0
@@ -1643,10 +1641,9 @@ MonoBehaviour:
   - type: 1
     value: 1
   - type: 2
-    value: 3
+    value: 2
   - type: 4
     value: 0
-  _damageDisplayerPrefab: {fileID: 3081537592369303743, guid: 9054f9213cd4ec642933a8aa94735042, type: 3}
   _attackRangeVisualizer: {fileID: 388795189}
   _projectilePrefab: {fileID: 969399080268615936, guid: ae354a58d1bc0034c8c931352c1bb5d5, type: 3}
   _attackLayers:
@@ -1674,7 +1671,7 @@ Rigidbody2D:
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 0
-  m_Constraints: 3
+  m_Constraints: 7
 --- !u!58 &764310666
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -1691,6 +1688,32 @@ CircleCollider2D:
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
   m_Radius: 0.5
+--- !u!114 &764310667
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 764310660}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e0c7495abd481854ea1b64a80ee3113f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _movingTextPrefab: {fileID: 3081537592369303743, guid: 9054f9213cd4ec642933a8aa94735042, type: 3}
+--- !u!114 &764310668
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 764310660}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2961976840d1a8b47b523d95ab4133f1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _maxHealth: 10
 --- !u!1 &862951264
 GameObject:
   m_ObjectHideFlags: 0
@@ -2916,29 +2939,34 @@ MonoBehaviour:
   _statUpgrades:
   - type: 0
     cost: 1
-    incrementalCost: 2
-    value: 0.1
-    maxValue: 100
+    incrementalCost: 5
+    value: 1
+    maxValue: 0
+    hasMaxValue: 0
   - type: 1
     cost: 1
-    incrementalCost: 2
-    value: 0.1
-    maxValue: 10
+    incrementalCost: 20
+    value: 1
+    maxValue: 0
+    hasMaxValue: 0
   - type: 2
-    cost: 2
-    incrementalCost: 4
-    value: 0.05
-    maxValue: 3.5
+    cost: 10
+    incrementalCost: 10
+    value: 1
+    maxValue: 4
+    hasMaxValue: 1
   - type: 3
     cost: 1
     incrementalCost: 2
-    value: 0.1
-    maxValue: 100
+    value: 1
+    maxValue: 0
+    hasMaxValue: 0
   - type: 4
-    cost: 1
-    incrementalCost: 2
-    value: 0.1
-    maxValue: 10
+    cost: 10
+    incrementalCost: 20
+    value: 1
+    maxValue: 0
+    hasMaxValue: 0
 --- !u!1 &1694355975
 GameObject:
   m_ObjectHideFlags: 0

@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -19,13 +18,13 @@ public class UpgradeManager : MonoBehaviour
     private void OnEnable()
     {
         _player.onGoldUpdated += UpdateUpgradeButtons;
-        _player.onDie += DisableButtons;
+        _player.damageable.onDie += DisableButtons;
     }
 
     private void OnDisable()
     {
         _player.onGoldUpdated -= UpdateUpgradeButtons;
-        _player.onDie -= DisableButtons;
+        _player.damageable.onDie -= DisableButtons;
     }
 
     private void Awake()
@@ -84,7 +83,7 @@ public class UpgradeManager : MonoBehaviour
             return;
         }
 
-        if (MathF.Round(_player.GetStatValue(type), 2) >= MathF.Round(upgrade.maxValue, 2))
+        if (upgrade.hasMaxValue && _player.GetStatValue(type) >= upgrade.maxValue)
         {
             button.interactable = false;
             button.gameObject.GetComponentInChildren<TextMeshProUGUI>().SetText("MAX.");

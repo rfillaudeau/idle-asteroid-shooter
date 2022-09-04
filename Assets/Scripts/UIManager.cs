@@ -16,19 +16,19 @@ public class UIManager : MonoBehaviour
 
     private void OnEnable()
     {
-        _player.onHealthChanged += UpdatePlayerStatsText;
+        _player.damageable.onHealthChanged += UpdatePlayerStatsText;
         _player.onStatUpdated += UpdatePlayerStatsText;
         _player.onGoldUpdated += UpdatePlayerStatsText;
-        _player.onDie += DisplayGameOver;
+        _player.damageable.onDie += DisplayGameOver;
         _asteroidManager.onNewWave += UpdateWaveCountText;
     }
 
     private void OnDisable()
     {
-        _player.onHealthChanged -= UpdatePlayerStatsText;
+        _player.damageable.onHealthChanged -= UpdatePlayerStatsText;
         _player.onStatUpdated -= UpdatePlayerStatsText;
         _player.onGoldUpdated -= UpdatePlayerStatsText;
-        _player.onDie -= DisplayGameOver;
+        _player.damageable.onDie -= DisplayGameOver;
         _asteroidManager.onNewWave -= UpdateWaveCountText;
     }
 
@@ -44,15 +44,15 @@ public class UIManager : MonoBehaviour
 
         text.Append($"Gold: {_player.gold}");
         text.AppendLine();
-        text.Append($"Health: {_player.health.ToString("0.00")}/{_player.maxHealth.ToString("0.00")}");
+        text.Append($"Health: {_player.damageable.health.ToString()}/{_player.damageable.maxHealth.ToString()}");
         text.AppendLine();
-        text.Append($"Attack Strength: {_player.attackStrength.ToString("0.00")}");
+        text.Append($"Attack Strength: {_player.attackStrength.ToString()}");
         text.AppendLine();
-        text.Append($"Attack Speed: {_player.attackSpeed.ToString("0.00")}");
+        text.Append($"Attack Speed: {_player.attackSpeed.ToString()}");
         text.AppendLine();
-        text.Append($"Attack Range: {_player.attackRange.ToString("0.00")}");
+        text.Append($"Attack Range: {_player.attackRange.ToString()}");
         text.AppendLine();
-        text.Append($"Health Regen.: +{_player.GetStatValue(StatType.HealthRegeneration).ToString("0.00")}/s.");
+        text.Append($"Health Regen.: +{_player.GetStatValue(StatType.HealthRegeneration).ToString()}/s.");
 
         _playerStatsText.SetText(text.ToString());
     }

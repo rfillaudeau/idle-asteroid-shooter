@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class Projectile : MonoBehaviour
 {
-    public float strength = 1f;
+    public int strength = 1;
 
     [SerializeField] private float _destroyAfterSeconds = 1f;
     [SerializeField] private float _shootForce = 10f;
@@ -37,7 +37,7 @@ public class Projectile : MonoBehaviour
             return;
         }
 
-        asteroid.TakeDamage(strength);
+        asteroid.damageable.TakeDamage(strength);
 
         _spriteRenderer.gameObject.SetActive(false);
         _rigidbody.velocity = Vector2.zero;

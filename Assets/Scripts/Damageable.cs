@@ -1,24 +1,36 @@
 using System;
 using UnityEngine;
 
-public abstract class Damageable : MonoBehaviour
+public class Damageable : MonoBehaviour
 {
-    public float health { get { return _health; } }
+    public int health { get { return _health; } }
+    public int maxHealth { get { return _maxHealth; } }
+    public bool isDead { get { return _health == 0; } }
+    public bool isHealthFull { get { return _health == _maxHealth; } }
+
+    public event Action<int> onTakeDamage;
+    public event Action<int> onHeal;
     public event Action onHealthChanged;
     public event Action onDie;
 
-    [SerializeField] protected float _health = 0f;
-    [SerializeField] protected float _maxHealth = 1f;
+    private int _health = 0;
+    [SerializeField] private int _maxHealth = 1;
 
-    public virtual void TakeDamage(float damage)
+    public void TakeDamage(int damage)
     {
-        _health -= damage;
-
-        if (_health <= 0f)
+        if (isDead)
         {
-            _health = 0f;
+            return;
         }
 
+        _health -= damage;
+
+        if (_health <= 0)
+        {
+            _health = 0;
+        }
+
+        onTakeDamage?.Invoke(damage);
         onHealthChanged?.Invoke();
 
         if (_health <= 0f)
@@ -27,8 +39,13 @@ public abstract class Damageable : MonoBehaviour
         }
     }
 
-    public virtual void Heal(float heal)
+    public void Heal(int heal)
     {
+        if (isHealthFull)
+        {
+            return;
+        }
+
         _health += heal;
 
         if (_health >= _maxHealth)
@@ -36,16 +53,24 @@ public abstract class Damageable : MonoBehaviour
             _health = _maxHealth;
         }
 
+        onHeal?.Invoke(heal);
         onHealthChanged?.Invoke();
     }
 
-    protected virtual void Awake()
-    {
-        ResetHealth();
-    }
-
-    protected void ResetHealth()
+    public void Revive()
     {
         _health = _maxHealth;
+
+        onHealthChanged?.Invoke();
+    }
+
+    public void UpgradeMaxHealth(int maxHealth)
+    {
+        _maxHealth = maxHealth;
+    }
+
+    private void Awake()
+    {
+        Revive();
     }
 }

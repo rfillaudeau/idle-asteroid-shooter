@@ -3,13 +3,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Player : Damageable
+public class Player : MonoBehaviour
 {
-    public float attackStrength { get { return GetStatValue(StatType.AttackStrength); } }
-    public float attackSpeed { get { return GetStatValue(StatType.AttackSpeed); } }
-    public float attackRange { get { return GetStatValue(StatType.AttackRange); } }
-    public float maxHealth { get { return _maxHealth; } }
+    public int attackStrength { get { return GetStatValue(StatType.AttackStrength); } }
+    public int attackSpeed { get { return GetStatValue(StatType.AttackSpeed); } }
+    public int attackRange { get { return GetStatValue(StatType.AttackRange); } }
     public int gold { get { return _gold; } }
+
+    public Damageable damageable { get { return _damageable; } }
 
     public event Action onStatUpdated;
     public event Action onGoldUpdated;
@@ -17,53 +18,38 @@ public class Player : Damageable
     [SerializeField] private int _gold = 0;
     [SerializeField] private List<StatValue> stats;
 
-    [SerializeField] private DamageDisplayer _damageDisplayerPrefab;
-
     [SerializeField] private GameObject _attackRangeVisualizer;
     [SerializeField] private Projectile _projectilePrefab;
     [SerializeField] private LayerMask _attackLayers;
     [SerializeField] private float _attackCooldown = 1f;
     [SerializeField] private float _healthRegenerationCooldown = 1f;
 
+    private Damageable _damageable;
+
     private bool _canAttack = true;
     private bool _canRegenerateHealth = true;
 
-    public override void TakeDamage(float damage)
-    {
-        base.TakeDamage(damage);
-
-        DamageDisplayer damageDisplayer = Instantiate(_damageDisplayerPrefab, transform.position, Quaternion.identity);
-        damageDisplayer.transform.localScale *= 0.5f;
-        damageDisplayer.SetDamageColor(Color.white);
-        damageDisplayer.SetDamageText(damage.ToString("0.00"));
-
-        if (_health <= 0)
-        {
-            Destroy(gameObject);
-        }
-    }
-
-    public float GetStatValue(StatType type)
+    public int GetStatValue(StatType type)
     {
         if (type == StatType.MaxHealth)
         {
-            return _maxHealth;
+            return _damageable.maxHealth;
         }
 
         StatValue stat = stats.Find(s => s.type == type);
         if (stat == null)
         {
-            return 1f;
+            return 1;
         }
 
         return stat.value;
     }
 
-    public void UpgradeStat(StatType type, float upgrade)
+    public void UpgradeStat(StatType type, int upgrade)
     {
         if (type == StatType.MaxHealth)
         {
-            _maxHealth += upgrade;
+            _damageable.UpgradeMaxHealth(_damageable.maxHealth + upgrade);
         }
         else
         {
@@ -91,14 +77,21 @@ public class Player : Damageable
         onGoldUpdated?.Invoke();
     }
 
+    private void Awake()
+    {
+        _damageable = GetComponent<Damageable>();
+    }
+
     private void OnEnable()
     {
         Asteroid.onDestroyedWithValue += AddGold;
+        _damageable.onDie += Died;
     }
 
     private void OnDisable()
     {
         Asteroid.onDestroyedWithValue -= AddGold;
+        _damageable.onDie -= Died;
     }
 
     private void Start()
@@ -152,15 +145,15 @@ public class Player : Damageable
 
     private void RegenerateHealth()
     {
-        float healthRegeneration = GetStatValue(StatType.HealthRegeneration);
-        if (healthRegeneration == 0f || !_canRegenerateHealth)
+        int healthRegeneration = GetStatValue(StatType.HealthRegeneration);
+        if (healthRegeneration == 0 || !_canRegenerateHealth)
         {
             return;
         }
 
         _canRegenerateHealth = false;
 
-        Heal(healthRegeneration);
+        _damageable.Heal(healthRegeneration);
 
         StartCoroutine(HealthRegenerationCooldown());
     }
@@ -207,6 +200,11 @@ public class Player : Damageable
         yield return new WaitForSeconds(_healthRegenerationCooldown);
 
         _canRegenerateHealth = true;
+    }
+
+    private void Died()
+    {
+        Destroy(gameObject);
     }
 
     private void OnDrawGizmos()
